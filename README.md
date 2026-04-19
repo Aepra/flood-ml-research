@@ -88,8 +88,13 @@ This project uses a **spatio-temporal dataset**, where each row represents:
 
 ### Dataset Structure
 
-| lat | lon | date | rainfall | rainfall_3day | rainfall_7day | elevation | slope | landuse | distance_river | flood | region |
-|---|---|---|---|---|---|---|---|---|---|---|---|
+Each row represents a specific geographic location observed at a given date.
+
+| lat | lon | date | rainfall (mm) | rainfall_3day (mm) | rainfall_7day (mm) | elevation (m) | slope (°) | landuse | distance_river (m) | flood | region |
+|-----|-----|------|---------------|--------------------|--------------------|----------------|------------|----------|---------------------|--------|--------|
+| -5.1477 | 119.4327 | 2020-01-15 | 45.2 | 120.5 | 210.3 | 12 | 1.8 | urban | 350 | 1 | Makassar |
+| -5.1501 | 119.4350 | 2020-01-16 | 10.3 | 60.2 | 150.8 | 15 | 2.1 | urban | 420 | 0 | Makassar |
+| -6.2088 | 106.8456 | 2021-02-10 | 80.5 | 200.1 | 350.7 | 8 | 0.9 | urban | 150 | 1 | Jakarta |
 
 **Column Description:**
 
