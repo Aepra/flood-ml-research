@@ -56,6 +56,8 @@ This research contributes by:
 - **Training Region:** Makassar, Indonesia  
 - **Testing Region:** Jakarta, Indonesia  
 
+---
+
 ### Rationale for Region Selection
 
 Makassar and Jakarta are selected because:
@@ -65,6 +67,7 @@ Makassar and Jakarta are selected because:
 - Data availability is relatively consistent across both regions  
 
 This enables controlled evaluation of spatial generalization under realistic conditions.
+
 ---
 
 ## Dataset Design
