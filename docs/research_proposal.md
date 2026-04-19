@@ -1,478 +1,247 @@
-# A Diagnostic Framework for Quantifying Spatio-Temporal Shortcut Learning in Machine Learning-Based Flood Prediction Under Cross-Regional and Temporal Distribution Shifts
+# 📄 Research Proposal (FINAL VERSION)
+## Spatio-Temporal Flood Shortcut Learning Diagnosis Framework (ST-FSLD v1.0)
+
+**Version:** 1.0 – Final Q1 Submission Ready  
+**Last Updated:** April 2026  
+**Domain:** Geospatial Machine Learning / Environmental AI / Model Robustness  
+**Core Focus:** Shortcut Learning under Spatio-Temporal Distribution Shift
 
 ---
 
-## 1. Research Positioning
+# 1. Research Positioning
 
-Flood prediction using machine learning has achieved high predictive performance in recent studies. However, high in-domain accuracy does not necessarily indicate that models learn physically meaningful hydrological processes.
+Modern machine learning models in environmental prediction (e.g., flood forecasting) often achieve high in-domain performance but fail under distribution shifts. This raises a critical concern: models may not learn physical processes, but instead rely on **shortcut features** such as spatial coordinates or temporal correlations.
 
-Instead, models may rely on **spatio-temporal shortcut mechanisms**, such as:
-- geographic encoding (lat/lon memorization)
-- regional rainfall co-occurrence patterns
-- temporal seasonality leakage
+This research positions itself in the intersection of:
+- Geospatial Machine Learning
+- Out-of-Distribution (OOD) Generalization
+- Shortcut Learning Diagnosis
+- Environmental Risk Modeling (Floods)
 
-A key limitation in current literature is the absence of a **quantitative framework** to measure shortcut learning under spatial and temporal distribution shifts.
-
----
-
-## 2. Problem Statement
-
-There is no standardized metric or framework to quantify the extent to which machine learning flood prediction models rely on spatio-temporal shortcuts rather than physically consistent hydrological relationships.
-
-This leads to an open question:
-
-> Do flood prediction models generalize hydrologically, or do they fail under distribution shift due to shortcut learning?
+The core objective is not prediction accuracy, but **diagnosis of model behavior under spatio-temporal shifts**.
 
 ---
 
-## 3. Research Objectives
+# 2. Problem Statement
 
-### Main Objective
+Despite strong predictive performance of ML models in flood prediction tasks, there is limited understanding of:
 
-To develop a diagnostic framework for quantifying spatio-temporal shortcut learning in flood prediction models under distribution shift.
+> Whether models learn physically meaningful relationships or rely on spurious spatial-temporal shortcuts.
 
-### Specific Objectives
+Current literature lacks:
+- Systematic evaluation under spatial AND temporal shift simultaneously
+- Quantitative metrics for shortcut learning severity
+- Multi-layer diagnostic frameworks combining behavioral, intervention, and causal tests
+- Controlled geospatial perturbation experiments
 
-- Quantify shortcut learning behavior in in-domain and shifted settings  
-- Measure performance degradation under spatial shift (Makassar → Jakarta)  
-- Measure performance degradation under temporal shift (2018–2020 → 2021–2022)  
-- Evaluate dependence on spatial proxy features (lat/lon)  
-- Assess physical consistency of model predictions  
-- Identify structured failure modes under distribution shift  
-
----
-
-## 4. Research Questions
-
-### RQ1 — In-Domain Shortcut Dependency  
-Do models already rely on spatio-temporal shortcuts even within the training region?
-
-### RQ2 — Spatial Generalization Failure  
-How significantly does model performance degrade under cross-regional shift?
-
-### RQ3 — Temporal Generalization Failure  
-Do models rely on temporal correlations that fail across years?
-
-### RQ4 — Feature Shortcut Dominance  
-To what extent do spatial features (lat/lon) dominate predictive signals?
-
-### RQ5 — Physical Consistency Violation  
-Do model predictions violate expected hydrological relationships?
-
-### RQ6 — Failure Mode Structure  
-What structured failure patterns emerge under distribution shift?
+This leads to unreliable models when deployed outside training regions or time periods.
 
 ---
 
-## 5. Hypotheses
+# 3. Research Objectives
 
-- H1: Models exhibit shortcut learning even in in-domain evaluation  
-- H2: Spatial shift leads to significant performance degradation  
-- H3: Temporal shift exposes reliance on seasonal correlations  
-- H4: Spatial features (lat/lon) dominate model predictions  
-- H5: Models violate expected hydrological monotonicity relationships  
-- H6: Failure modes are structured rather than random  
+## Primary Objective
+To develop a diagnostic framework for identifying shortcut learning in spatio-temporal flood prediction models under distribution shift.
 
----
-
-## 6. Dataset Design
-
-### 6.1 Spatio-Temporal Unit
-
-Each sample represents a spatial location at a specific time:
-
-```
-(lat, lon, date) → feature vector → flood label
-```
+## Specific Objectives
+1. Measure model degradation under spatial and temporal shift conditions
+2. Quantify reliance on spatial coordinates (latitude/longitude)
+3. Evaluate physical consistency of model predictions
+4. Identify and categorize failure modes in OOD conditions
+5. Develop a unified Shortcut Learning Score
+6. Propose causal consistency evaluation for geospatial ML models
 
 ---
 
-### 6.2 Features
+# 4. Research Questions
 
-**Environmental**
-- rainfall
-- rainfall_3day
-- rainfall_7day
-
-**Topographic**
-- elevation
-- slope
-
-**Land**
-- landuse
-
-**Hydrological**
-- distance_river
-
-**Spatial (diagnostic only)**
-- lat
-- lon
+- RQ1: How significantly do flood prediction models degrade under spatial shift?
+- RQ2: How sensitive are models to temporal distribution changes?
+- RQ3: Do models rely on geographic coordinates as predictive shortcuts?
+- RQ4: Do predictions follow physically consistent hydrological rules?
+- RQ5: What types of failure modes dominate under distribution shift?
+- RQ6: Can shortcut learning be quantified into a single diagnostic score?
 
 ---
 
-### 6.3 Target Variable
+# 5. Hypotheses
 
-- flood = 1 (flood event)
-- flood = 0 (non-flood)
-
----
-
-### 6.4 Dataset Structure
-
-| lat | lon | date | rainfall | rainfall_3day | rainfall_7day | elevation | slope | landuse | distance_river | flood | region |
-
-Primary key:
-
-```
-(lat, lon, date)
-```
+- H1: Models exhibit significant performance degradation under spatial shift
+- H2: Temporal shift reveals hidden seasonal shortcut dependencies
+- H3: Latitude/longitude are dominant proxy features in model decisions
+- H4: Models violate physical monotonicity constraints in flood processes
+- H5: Failure modes cluster into spatial, temporal, and physical inconsistency types
+- H6: A unified shortcut score can reliably measure model robustness
 
 ---
 
-### 6.5 Temporal Sampling Strategy
+# 6. Dataset Design
 
-- Event-based sampling using flood occurrences  
-- Pre-flood window (3–7 days before event)  
-- Flood event day labeled as positive class  
+## Fundamental Unit
+Each data point is defined as:
 
----
+> (latitude, longitude, date) → feature vector → flood label
 
-### 6.6 Temporal Coverage
+## Spatial Design
+- Grid resolution: 250m × 250m
+- Regions: Makassar, Jakarta (Indonesia)
+- CRS: WGS84 / UTM Zone 50S
 
-- 2018 – 2020: Training set  
-- 2021 – 2022: Testing set  
+## Temporal Design
+- Daily resolution
+- Time span: 2018–2022
+- Strict temporal separation for testing (no leakage)
 
----
-
-## 7. Data Sources
-
-- Rainfall: CHIRPS / NASA  
-- Elevation: SRTM (DEM)  
-- Land use: ESA WorldCover  
-- River network: OpenStreetMap  
-- Flood labels: Sentinel-1 SAR (Google Earth Engine)  
+## Label Definition
+Flood event derived from Sentinel-1 SAR backscatter:
+- Threshold-based classification (-3 dB change)
 
 ---
 
-## 8. Methodology Pipeline
+# 7. Data Sources
 
-### Step 1 — Data Collection  
-Collect multi-source geospatial datasets.
-
-### Step 2 — Flood Label Generation  
-- Use Sentinel-1 SAR imagery  
-- Detect water extent changes between pre-event and flood periods  
-- Generate binary flood labels  
-
-### Step 3 — Preprocessing  
-- Spatial alignment  
-- Missing value handling  
-- Normalization  
-
-### Step 4 — Feature Engineering  
-- Rainfall aggregation (3-day, 7-day)  
-- Slope computation from DEM  
-- Distance to river calculation  
-- Land use encoding  
-
-### Step 5 — Model Training  
-- Random Forest  
-- XGBoost  
-
-### Step 6 — Diagnostic Evaluation  
-Instead of only predictive accuracy, evaluate:
-
-- in-domain performance  
-- spatial shift performance  
-- temporal shift performance  
-- feature dependency (ablation)  
-- physical consistency checks  
+- CHIRPS: precipitation data
+- SRTM: elevation model
+- ESA WorldCover: land use classification
+- OpenStreetMap: river network
+- Sentinel-1: flood event detection (SAR)
 
 ---
 
-## 9. Experimental Design: Multi-Layer Evidence Framework
+# 8. Methodology Pipeline
 
-We construct a **multi-layer diagnostic framework** combining observational, shift-based, interventional, and counterfactual evidence to detect spatio-temporal shortcut learning.
-
----
-
-### LAYER 1 — Observational Baseline
-
-#### Experiment 1.1 — In-Domain Baseline  
-Train and test within Makassar (2018–2020 → 2021–2022)
-- **Purpose:** Establish baseline performance ceiling
-- **Output:** AUC, F1, confusion matrix
-
-#### Experiment 1.2 — Sub-Region Holdout  
-Train on Makassar subregion → test on held-out subregion
-- **Purpose:** Internal spatial validation (short-range shift)
-- **Output:** Performance within-region vs across-region
+1. Data acquisition from multi-source geospatial datasets
+2. Spatial alignment and CRS normalization
+3. Resampling to unified 250m grid
+4. Feature engineering (hydrological + topographic + spatial)
+5. Train-test splitting (spatial + temporal)
+6. Model training (Random Forest, XGBoost)
+7. Evaluation under multiple distribution shift scenarios
+8. Diagnostic analysis (feature, physical, causal)
 
 ---
 
-### LAYER 2 — Natural Distribution Shift
+# 9. Experimental Design
 
-#### Experiment 2.1 — Spatial Shift Test  
-Train on Makassar → test on Jakarta
-- **Purpose:** Detect geographic memorization under cross-regional shift
-- **Expected:** Large AUC drop if model learns lat/lon encoding
+## Layer 1: In-Domain Evaluation
+- Train and test within same region
+- Establish performance baseline
 
-#### Experiment 2.2 — Temporal Shift Test  
-Train 2018–2020 → test 2021–2022
-- **Purpose:** Detect seasonal shortcuts under temporal distribution shift
-- **Expected:** AUC drop if model exploits seasonal correlations
+## Layer 2: Distribution Shift
+- Spatial shift: Makassar → Jakarta
+- Temporal shift: 2018–2020 → 2021–2022
 
-#### Experiment 2.3 — Distance-Based Split  
-Train on near-region cells → test on far-region cells
-- **Purpose:** Quantify performance degradation as function of geographic distance
-- **Output:** AUC vs distance curve
+## Layer 3: Intervention Tests
+- Spatial perturbation (noise injection)
+- Spatial shuffle (structure destruction)
+- Feature ablation (lat/lon removal)
+- Counterfactual modification
 
----
-
-### LAYER 3 — Intervention Experiments (Q1-Critical)
-
-#### Experiment 3.1 — Spatial Perturbation Test  
-Add controlled noise to geographic coordinates.
-
-| Noise Level | Magnitude | Purpose |
-|-------------|-----------|---------|
-| Small | ±100m | Minimal geographic shift |
-| Medium | ±1km | Local neighborhood change |
-| Large | ±5km | Regional scale shift |
-
-**Procedure:**
-1. Perturb lat/lon: `(lat', lon') = (lat + ε, lon + ε)`
-2. Keep all other features fixed
-3. Measure AUC degradation
-
-**Expected:** If model relies on coordinate memorization, even small perturbations cause large accuracy drops.
+## Layer 4: Causal & Physical Validation
+- Monotonicity testing
+- Physical law consistency
+- Causal consistency scoring
 
 ---
 
-#### Experiment 3.2 — Spatial Shuffle Test (Region Break)  
-Shuffle grid cells within meaningful geospatial contexts.
+# 10. Shortcut Learning Score
 
-**Procedure:**
-1. **Shuffle A:** Swap coordinates within Makassar (preserve physical features)
-2. **Shuffle B:** Swap coordinates between similar elevation zones (preserve physical similarity)
-3. **Shuffle C:** Random global shuffle (destroy all spatial structure)
+A unified metric:
 
-**Expected:** 
-- Shuffle A: Moderate drop (location encoding violated)
-- Shuffle B: Small drop (physical similarity preserved)
-- Shuffle C: Severe drop (all spatial structure lost)
-
----
-
-#### Experiment 3.3 — Feature Intervention Dose Test  
-Systematically vary feature combinations.
-
-| Configuration | Features Included | Purpose |
-|---------------|------------------|---------|
-| Full | All 11 features | Baseline |
-| No-Spatial | Remove lat/lon | Isolate physical features |
-| Spatial-Only | Only lat/lon | Pure geographic encoding |
-| No-Physical | Remove rainfall, elevation, river dist | Spatial + land use only |
-| Rainfall-Only | Only rainfall | Single dominant physical feature |
-
-**Expected:** Measure feature importance via AUC difference between configurations.
-
----
-
-#### Experiment 3.4 — Counterfactual Flood Test  
-Generate synthetic samples with modified environmental features.
-
-**Procedure:**
-
-For each real flood event (lat, lon, date):
-
-1. Create synthetic non-flood by perturbing:
-   - Rainfall: reduce by 50%
-   - Elevation: increase by 100m
-   - River distance: increase by 1km
-
-2. Create synthetic flood by perturbing non-flood:
-   - Rainfall: increase by 50%
-   - Elevation: decrease by 100m
-   - River distance: decrease by 1km
-
-3. Measure model's prediction change
-
-**Expected:** If model understands physical relationships, counterfactual perturbations should align with expected flood probability change.
-
----
-
-### LAYER 4 — Counterfactual Logic Tests
-
-#### Experiment 4.1 — Monotonicity Test  
-Verify whether model predictions follow expected hydrological laws.
-
-**Physical Rules (Must Hold):**
-- Rainfall ↑ → Flood probability ↑
-- Elevation ↑ → Flood probability ↓
-- River distance ↑ → Flood probability ↓
-- Slope ↑ → Flood probability ↓ (water drains faster)
-
-**Procedure:**
-1. For each sample, vary one feature incrementally
-2. Record prediction response
-3. Compute violation rate: % predictions violating monotonicity
-
-**Expected:** Low violation rate (< 10%) indicates physical consistency.
-
----
-
-#### Experiment 4.2 — Causal Consistency Score  
-Quantify model compliance with physical causal relationships.
-
-$$C = \frac{\text{# predictions consistent with physical laws}}{\text{# total predictions}} \times 100\%$$
-
-**Procedure:**
-1. For each sample: apply counterfactual perturbation
-2. Compute expected direction of prediction change (from physics)
-3. Compare with actual model prediction change
-4. Aggregate consistency rate
-
-**Interpretation:**
-- C = 100%: Perfect physical alignment
-- C = 50%: Random with respect to physics
-- C < 50%: Anti-aligned with physics (shortcut learning evidence)
-
----
-
-## Summary: Four-Layer Diagnostic Framework
-
-```
-LAYER 1 — OBSERVATIONAL
-├─ In-domain baseline (AUC_in)
-└─ Sub-region holdout
-
-LAYER 2 — NATURAL SHIFT
-├─ Spatial shift: Makassar → Jakarta (AUC_spatial)
-├─ Temporal shift: 2018–2020 → 2021–2022 (AUC_temporal)
-└─ Distance-based split (AUC vs distance)
-
-LAYER 3 — INTERVENTIONS (Q1-CRITICAL)
-├─ Spatial perturbation (noise injection)
-├─ Spatial shuffle (region break test)
-├─ Feature intervention (dose test)
-└─ Counterfactual generation (synthetic samples)
-
-LAYER 4 — COUNTERFACTUAL LOGIC
-├─ Monotonicity test (law violations)
-└─ Causal consistency score (C metric)
-```
-
----
-
-## Shortcut Learning Detection via Multi-Layer Evidence
-
-**Primary Detection Logic:**
-
-```
-IF (AUC_spatial << AUC_in) AND
-   (AUC_shift_perturbation << AUC_baseline) AND
-   (Causal_Consistency_Score < 50%) AND
-   (Feature_Importance(lat/lon) > Feature_Importance(rainfall))
-THEN model exhibits strong spatial shortcut learning
-```
-
-**Evidence Strength Ranking:**
-1. **Strongest:** Counterfactual logic + monotonicity violation
-2. **Strong:** Spatial perturbation + feature intervention
-3. **Moderate:** Spatial shift + distance-based split
-4. **Baseline:** In-domain vs shift comparison
-
----
-
-## 10. Shortcut Learning Quantification
-
-### Shortcut Learning Score
-
-```
-S = (AUC_in-domain - AUC_shift) / AUC_in-domain
-```
-
----
-
-### Decomposed Form
-
-```
-S = S_spatial + S_temporal + S_feature
-```
+\[
+S = \frac{AUC_{in-domain} - AUC_{shift}}{AUC_{in-domain}}
+\]
 
 Where:
-- S_spatial = degradation under regional shift  
-- S_temporal = degradation under temporal shift  
-- S_feature = degradation after removing spatial features  
+- Higher S → stronger shortcut dependency
+- S ≈ 0 → robust generalization
+- S → 1 → complete failure under shift
 
 ---
 
-## 11. Failure Mode Taxonomy
+# 11. Failure Mode Taxonomy
 
-| Type | Definition | Signature |
-|------|------------|----------|
-| Spatial Memorization Failure | Over-reliance on geographic coordinates | High lat/lon importance + spatial shift drop |
-| Temporal Shortcut Failure | Dependence on seasonal patterns | Performance drop across years |
-| Hydrological Inconsistency Failure | Violates physical relationships | Rainfall ↑ but flood ↓ |
-| Feature Proxy Dominance | Non-physical features dominate prediction | Lat/lon > rainfall importance |
+1. Spatial Memorization Failure  
+   → reliance on latitude/longitude encoding
 
----
+2. Temporal Shortcut Failure  
+   → seasonal correlation exploitation
 
-## 12. Analysis Framework
+3. Hydrological Inconsistency  
+   → violation of rainfall-flood relationship
 
-The analysis is structured into three layers:
-
-### Layer 1 — Behavioral Shift
-Performance degradation under spatial and temporal shifts.
-
-### Layer 2 — Shortcut Dependency
-Feature attribution analysis (SHAP + ablation).
-
-### Layer 3 — Structural Failure Mechanisms
-Categorization of failure modes into interpretable types.
+4. Feature Proxy Dominance  
+   → non-physical feature over-dependence
 
 ---
 
-## 13. Expected Findings
+# 12. Analysis Framework
 
-- Evidence of spatio-temporal shortcut learning in in-domain models  
-- Significant performance degradation under distribution shift  
-- Strong dependence on spatial proxy variables (lat/lon)  
-- Violations of hydrological consistency  
-- Structured failure patterns under shift conditions  
+## Layered Diagnostic Structure
 
----
+### Layer A: Behavioral
+- AUC degradation under shift
 
-## 14. Contributions
+### Layer B: Feature Dependency
+- SHAP importance
+- Permutation analysis
+- Ablation sensitivity
 
-- A quantitative framework for diagnosing shortcut learning in geospatial ML systems  
-- A cross-regional and temporal evaluation protocol for flood prediction models  
-- A failure mode taxonomy for machine learning in hydrological applications  
-- Empirical evidence that flood prediction models rely on non-physical correlations under distribution shift  
+### Layer C: Intervention Response
+- Perturbation tests
+- Feature removal impact
+- Counterfactual response
 
----
-
-## 15. Risks and Mitigation
-
-### Risks
-- Noise in Sentinel-1 flood labeling  
-- Class imbalance in flood events  
-- Missing or inconsistent geospatial data  
-
-### Mitigation
-- Multi-source validation  
-- Balanced sampling strategies  
-- Noise filtering in SAR-based labeling  
+### Layer D: Mechanistic Consistency
+- Physical monotonicity
+- Causal alignment score
 
 ---
 
-## 16. Core Insight
+# 13. Expected Findings
 
-This research reframes flood prediction from a purely predictive task into a **diagnostic framework for understanding model behavior under distribution shift**, aiming to determine whether machine learning systems learn physical processes or spatio-temporal shortcuts.
+- Significant performance drop under spatial shift
+- Strong dependency on spatial coordinates
+- Weak generalization to unseen regions
+- Violation of physical hydrological constraints
+- Emergence of spatial memorization patterns
+- Clear dominance of shortcut features over physical variables
 
 ---
 
-## Final Note
+# 14. Contributions
 
-The key challenge is not building a predictive model, but rigorously quantifying what the model actually learns under distribution shift.
+1. A unified diagnostic framework for shortcut learning in geospatial ML
+2. A multi-layer evaluation system (behavioral → causal)
+3. A new Shortcut Learning Score (S)
+4. Empirical evidence of spatial memorization in flood models
+
+---
+
+# 15. Risks & Mitigation
+
+| Risk | Mitigation |
+|------|-----------|
+| Data leakage | Strict spatial-temporal splitting |
+| Overfitting | Cross-region validation |
+| Raster misalignment | CRS normalization (GeoPandas pipeline) |
+| Feature bias | Ablation + SHAP analysis |
+| Model instability | Multiple model comparison |
+
+---
+
+# 16. Core Insight
+
+This research reframes flood prediction from:
+
+> “How accurate is the model?”
+
+to
+
+> “What does the model actually learn?”
+
+The central claim is that high performance does not imply physical understanding. Instead, many geospatial ML models rely on **shortcut learning mechanisms that fail under distribution shift**.
+
+---
+
+# END OF DOCUMENT
