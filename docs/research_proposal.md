@@ -1,357 +1,351 @@
-# Flood Prediction Research Proposal
-
-## 1. Judul Penelitian
-
-**Evaluating the Generalization and Interpretability of Machine Learning Models for Flood Prediction Using Geospatial Data: A Case Study of Makassar with Cross-Regional Validation**
+# Flood Prediction Research Proposal (Revised & Strengthened)
 
 ---
 
-## 2. Tujuan Penelitian
+## 1. Title
 
-### Tujuan Utama
-
-Mengevaluasi kemampuan generalisasi dan interpretabilitas model machine learning dalam prediksi banjir berbasis data geospasial, serta memahami batasan penggunaannya dalam konteks lintas wilayah.
-
-### Tujuan Spesifik
-
-* Mengukur performa model pada data lokal (in-domain)
-* Menguji performa model pada wilayah berbeda (out-of-domain)
-* Menganalisis faktor yang mempengaruhi keputusan model
-* Mengidentifikasi kondisi di mana model gagal
-* Mengevaluasi stabilitas model terhadap perubahan data
-* Memberikan rekomendasi penggunaan model dalam skenario nyata
+**Evaluating the Generalization, Temporal Dynamics, and Spatial Bias of Machine Learning Models for Flood Prediction Using Multi-Source Geospatial Data: A Spatio-Temporal Study of Makassar with Cross-Regional Validation**
 
 ---
 
-## 3. Research Questions
+## 2. Research Positioning
 
-* **RQ1**
-  Seberapa baik model machine learning memprediksi banjir pada wilayah tempat model dilatih?
+Most existing flood prediction studies prioritize predictive accuracy within a specific region and time period. However, such approaches often fail to address deeper scientific questions:
 
-* **RQ2**
-  Seberapa besar penurunan performa model ketika diterapkan pada wilayah dengan karakteristik geografis berbeda?
+> Do machine learning models truly capture the physical processes of flooding, or do they rely on spatio-temporal shortcuts such as location and seasonality?
 
-* **RQ3**
-  Fitur apa yang paling mempengaruhi keputusan model dalam prediksi banjir?
+This research focuses on:
 
-* **RQ4**
-  Dalam kondisi apa model gagal memberikan prediksi yang akurat?
-
-* **RQ5**
-  Apakah model benar-benar belajar hubungan fisik (misalnya elevasi, curah hujan), atau hanya memanfaatkan pola lokasi tertentu?
-
-* **RQ6 (Tambahan)**
-  Seberapa stabil performa model terhadap perubahan distribusi data dan ukuran dataset?
+- Spatial generalization (cross-region)
+- Temporal generalization (cross-year)
+- Model reliance on physical vs spatio-temporal correlations
+- Behavior under distribution shift
 
 ---
 
-## 4. Hipotesis Awal
+## 3. Research Objectives
 
-* **H1**: Model akan memiliki performa tinggi pada data lokal (in-domain)
-* **H2**: Performa model akan menurun signifikan pada wilayah berbeda (out-of-domain)
-* **H3**: Elevasi dan curah hujan merupakan fitur dominan dalam prediksi banjir
-* **H4**: Model sensitif terhadap perubahan distribusi data
-* **H5**: Model cenderung mengalami penurunan interpretabilitas saat diterapkan pada wilayah baru
+### Main Objective
 
----
+To evaluate whether machine learning models truly learn physical flooding processes or rely on spatio-temporal shortcuts.
 
-## 5. Desain Data
+### Specific Objectives
 
-### 5.1 Variabel
-
-**Fitur:**
-
-* Curah hujan (rainfall intensity)
-* Elevasi (elevation)
-* Kemiringan (slope)
-* Penggunaan lahan (land use / land cover)
-* Jarak ke sungai (distance to river)
-
-**Target:**
-
-* Flood (0 = tidak banjir, 1 = banjir)
+- Evaluate in-domain performance
+- Measure cross-region performance degradation
+- Measure cross-year performance degradation
+- Analyze feature importance
+- Detect spatial bias
+- Identify failure patterns
+- Evaluate robustness
 
 ---
 
-### 5.2 Struktur Dataset
+## 4. Research Questions
 
-| lat | lon | rainfall | elevation | slope | landuse | distance_river | flood |
-| --- | --- | -------- | --------- | ----- | ------- | -------------- | ----- |
+### RQ1 — In-Domain Performance  
+Seberapa baik model memprediksi banjir pada wilayah training?
 
----
+### RQ2 — Cross-Region Generalization  
+Seberapa besar penurunan performa pada wilayah lain?
 
-### 5.3 Sumber Data
+### RQ3 — Temporal Generalization  
+Seberapa stabil performa antar tahun?
 
-* Curah hujan: CHIRPS / NASA
-* Elevasi: SRTM (DEM)
-* Land use: ESA WorldCover
-* Sungai: OpenStreetMap
-* Data banjir: laporan pemerintah, berita, atau labeling manual
+### RQ4 — Feature Importance  
+Fitur apa yang paling mempengaruhi model?
 
----
+### RQ5 — Spatial Bias (Core)  
+Apakah model bergantung pada lokasi (lat/lon)?
 
-### 5.4 Metode Pembuatan Dataset
-
-* Wilayah dibagi menjadi grid (misalnya 1 km x 1 km)
-* Setiap grid menjadi satu baris data
-* Nilai fitur diambil berdasarkan posisi geografis grid
-* Label banjir ditentukan berdasarkan histori kejadian
+### RQ6 — Failure Analysis  
+Dalam kondisi apa model gagal?
 
 ---
 
-## 6. Pipeline Penelitian
+## 5. Hypotheses
 
-### Step 1: Data Collection
-
-Mengumpulkan seluruh layer geospasial dari berbagai sumber
-
-**Output:** raw dataset multi-layer
-
----
-
-### Step 2: Preprocessing
-
-* Cleaning data
-* Handling missing values
-* Normalisasi
-* Penyamaan resolusi spasial (resampling)
-
-**Output:** cleaned & aligned dataset
+- H1: Model tinggi di in-domain  
+- H2: Performa turun di cross-region  
+- H3: Performa turun antar tahun  
+- H4: Rainfall & elevation dominan  
+- H5: Model bergantung pada lokasi  
+- H6: Model gagal pada kondisi ekstrem tertentu  
 
 ---
 
-### Step 3: Feature Engineering
+## 6. Data Design
 
-* Menghitung slope dari DEM
-* Menghitung jarak ke sungai
-* Encoding kategori land use
-* (Opsional) agregasi temporal curah hujan
+### 6.1 Spatio-Temporal Concept
 
-**Output:** final feature set
+Satu baris data merepresentasikan kombinasi lokasi dan waktu:
 
----
-
-### Step 4: Data Splitting
-
-**In-domain:**
-
-* Train: Makassar
-* Test: Makassar
-
-**Out-of-domain:**
-
-* Train: Makassar
-* Test: Jakarta / wilayah lain
+(lokasi, waktu) = 1 observasi
 
 ---
 
-### Step 5: Modeling
+### 6.2 Features
 
-**Model:**
+**Environmental**
+- rainfall
+- rainfall_3day
+- rainfall_7day
 
-* Random Forest
-* XGBoost
+**Topographic**
+- elevation
+- slope
 
-**Alasan:**
+**Land**
+- landuse
 
-* Robust terhadap data tabular
-* Tidak membutuhkan resource besar
-* Interpretability relatif baik
+**Hydrological**
+- distance_river
 
----
-
-### Step 6: Evaluation
-
-**Metrik:**
-
-* Accuracy
-* Precision
-* Recall
-* F1-score
-* ROC-AUC
-
-**Tambahan:**
-
-* Confusion Matrix (untuk error analysis)
+**Spatial (for bias testing)**
+- lat
+- lon
 
 ---
 
-## 7. Eksperimen Detail
+### 6.3 Target
 
-### Eksperimen 1: Baseline Performance
-
-Mengukur performa model pada data lokal
+flood = 0 (tidak banjir) / 1 (banjir)
 
 ---
 
-### Eksperimen 2: Generalization Test
+### 6.4 Dataset Structure
 
-Mengukur kemampuan model lintas wilayah
+| lat | lon | date | rainfall | rainfall_3day | rainfall_7day | elevation | slope | landuse | distance_river | flood | region |
 
-**Fokus:**
-
-* Penurunan performa
-* Perubahan pola prediksi
+Primary key:
+lat + lon + date
 
 ---
 
-### Eksperimen 3: Feature Importance
+### 6.5 Temporal Sampling Strategy
 
-Menentukan fitur paling berpengaruh
+Event-based sampling:
 
-**Tambahan:**
+- Identifikasi event banjir
+- Ambil periode sebelum banjir (pre-flood)
+- Ambil periode saat banjir
 
-* Bandingkan antar wilayah
-
----
-
-### Eksperimen 4: Data Sensitivity
-
-Mengukur robustness model
-
-**Variasi:**
-
-* Pengurangan data
-* Penambahan noise
-* Perubahan distribusi
+Dynamic window:
+pre-flood period + flood period
 
 ---
 
-### Eksperimen 5: Error Analysis
+### 6.6 Seasonal Bias Control
 
-Analisis mendalam kesalahan model
-
-**Tambahan:**
-
-* Analisis spasial error (lokasi kesalahan)
+- Tidak menggunakan fitur month
+- Campurkan data flood dan non-flood dalam musim hujan
+- Tambahkan sebagian data dari musim kering
 
 ---
 
-### Eksperimen 6: Bias Analysis
+### 6.7 Temporal Coverage
 
-Mengidentifikasi apakah model bias terhadap lokasi tertentu
-
-**Tambahan:**
-
-* Uji tanpa fitur koordinat
-* Bandingkan perubahan performa
+2018 – 2022
 
 ---
 
-## 8. Analisis (Bagian Paling Penting)
+## 7. Data Sources
 
-Fokus utama:
-
-* Apakah model overfit pada wilayah tertentu?
-* Seberapa besar penurunan performa lintas wilayah?
-* Apakah fitur dominan konsisten antar wilayah?
-* Apakah model benar-benar belajar hubungan fisik?
-* Kapan dan di mana model gagal?
-* Apakah model robust terhadap perubahan data?
+- Rainfall: CHIRPS / NASA  
+- Elevation: SRTM (DEM)  
+- Land use: ESA WorldCover  
+- River data: OpenStreetMap  
+- Flood labeling: Sentinel-1 (Google Earth Engine)  
 
 ---
 
-## 9. Output Penelitian
+## 8. Methodology Pipeline
 
-### Output Teknis
+### Step 1 — Data Collection
+Mengumpulkan seluruh data geospasial
 
-* Dataset geospasial terstruktur
-* Model machine learning
-* Script eksperimen
+### Step 2 — Flood Label Generation
+- Sentinel-1 SAR imagery  
+- Perbandingan sebelum vs saat banjir  
+- Thresholding untuk deteksi air  
 
-### Output Ilmiah
+### Step 3 — Preprocessing
+- Cleaning  
+- Missing value handling  
+- Normalization  
+- Spatial alignment  
 
-* Insight tentang generalisasi model
-* Analisis faktor penyebab banjir
-* Pemahaman keterbatasan model
+### Step 4 — Feature Engineering
+- Rainfall aggregation (3-day, 7-day)  
+- Slope calculation  
+- Distance to river  
+- Encoding land use  
 
-### Output Visual
+### Step 5 — Data Splitting
 
-* Peta risiko banjir
-* Grafik performa
-* Visualisasi feature importance
-* Peta distribusi error
+Temporal split:
+Train: 2018–2020  
+Test: 2021–2022  
 
----
-
-## 10. Kontribusi Penelitian
-
-* Evaluasi generalisasi model flood prediction
-* Analisis interpretabilitas model berbasis geospasial
-* Identifikasi keterbatasan model dalam kondisi nyata
-* Framework eksperimen untuk studi lanjutan
-
----
-
-## 11. Risiko dan Mitigasi
-
-* **Risiko 1:** Data banjir terbatas
-
-  * Solusi: kombinasi beberapa sumber + manual labeling
-
-* **Risiko 2:** Model performa rendah
-
-  * Solusi: fokus pada analisis, bukan performa
-
-* **Risiko 3:** Insight tidak signifikan
-
-  * Solusi: eksplorasi eksperimen lebih dalam
-
-* **Risiko 4:** Data antar wilayah tidak seimbang
-
-  * Solusi: normalisasi dan analisis distribusi data
+Spatial split:
+Train: Makassar  
+Test: Jakarta  
 
 ---
 
-## 12. Timeline
+### Step 6 — Modeling
 
-* Minggu 1–2: pengumpulan data
-* Minggu 3–4: preprocessing & feature engineering
-* Minggu 5–6: modeling
-* Minggu 7–8: eksperimen
-* Minggu 9: analisis
-* Minggu 10: penulisan
+- Random Forest  
+- XGBoost  
 
 ---
 
-## 13. Inti Penelitian (Ringkasan)
+### Step 7 — Evaluation
 
-Penelitian ini tidak bertujuan untuk menghasilkan model terbaik, tetapi untuk:
-
-* Mengevaluasi kemampuan generalisasi model
-* Memahami perilaku model
-* Mengidentifikasi kondisi kegagalan
-* Menghasilkan insight yang dapat digunakan dalam pengembangan model di masa depan
-
----
-
-## 14. Penilaian Jujur
-
-### Kekuatan:
-
-* Fokus pada problem nyata (generalization)
-* Tidak sekadar implementasi
-* Memiliki nilai ilmiah
-
-### Kelemahan:
-
-* Sangat bergantung pada kualitas data
-* Insight tidak selalu muncul
-* Membutuhkan analisis mendalam
+- Accuracy  
+- Precision  
+- Recall  
+- F1-score  
+- ROC-AUC  
+- Confusion Matrix  
 
 ---
 
-## Catatan Penting
+## 9. Experimental Design
 
-Versi ini sudah:
-
-* Level penelitian serius
-* Siap dijadikan proposal
-* Memiliki arah publishable
-
-Namun:
-
-* Bagian tersulit bukan coding
-* Melainkan analisis dan interpretasi hasil
+### Experiment 1 — Baseline
+Train dan test di Makassar  
 
 ---
+
+### Experiment 2 — Cross Region
+Train Makassar → Test Jakarta  
+
+---
+
+### Experiment 3 — Temporal Generalization
+Train tahun lama → Test tahun baru  
+
+---
+
+### Experiment 4 — Feature Importance
+- Random Forest / XGBoost  
+- SHAP analysis  
+
+---
+
+### Experiment 5 — Spatial Bias Test (Core)
+
+- Model A: dengan lat/lon  
+- Model B: tanpa lat/lon  
+
+---
+
+### Experiment 6 — Error Analysis
+- False Positive  
+- False Negative  
+- Distribusi spasial error  
+
+---
+
+### Experiment 7 — Sensitivity Analysis
+- Pengurangan data training  
+- Penambahan noise  
+- Perubahan distribusi data  
+
+---
+
+## 10. Analysis Focus
+
+- Penurunan performa lintas wilayah  
+- Stabilitas antar tahun  
+- Konsistensi feature importance  
+- Indikasi spatial bias  
+- Pola kegagalan model  
+- Robustness terhadap perubahan data  
+
+---
+
+## 11. Expected Outputs
+
+### Technical
+- Dataset spatio-temporal  
+- Model machine learning  
+- Pipeline eksperimen  
+
+### Scientific
+- Insight tentang generalisasi model  
+- Bukti adanya/tidaknya spatial bias  
+- Pemahaman keterbatasan model  
+
+### Visual
+- Peta banjir  
+- Grafik performa  
+- Feature importance plot  
+- Peta distribusi error  
+
+---
+
+## 12. Contributions
+
+- Evaluasi generalisasi model geospasial  
+- Identifikasi spatial bias dalam ML  
+- Framework spatio-temporal dataset  
+- Insight interpretability lintas wilayah  
+
+---
+
+## 13. Risks and Mitigation
+
+### Risks
+- Noise pada label Sentinel-1  
+- Data imbalance  
+- Missing data  
+
+### Mitigation
+- Filtering noise  
+- Balanced sampling  
+- Multi-source validation  
+
+---
+
+## 14. Timeline
+
+- Week 1–2: Data collection  
+- Week 3–4: Flood labeling  
+- Week 5–6: Feature engineering  
+- Week 7–8: Modeling & experiments  
+- Week 9: Analysis  
+- Week 10: Writing  
+
+---
+
+## 15. Core Insight
+
+Penelitian ini tidak bertujuan membuat model terbaik, tetapi:
+
+- Menguji kemampuan generalisasi  
+- Memahami perilaku model  
+- Mengidentifikasi kegagalan  
+- Menentukan apakah model belajar fisika atau hanya lokasi  
+
+---
+
+## 16. Honest Assessment
+
+### Strengths
+- Fokus riset kuat (generalization + bias)  
+- Bukan sekadar implementasi ML  
+- Potensi publishable  
+
+### Limitations
+- Bergantung pada kualitas data  
+- Kompleks secara implementasi  
+- Insight tidak dijamin muncul  
+
+---
+
+## Final Note
+
+The hardest part of this research is not building the model,  
+but understanding what the model actually learns.
