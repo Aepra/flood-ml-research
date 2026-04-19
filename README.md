@@ -35,17 +35,10 @@ Despite the increasing use of machine learning for flood prediction, it remains 
 - Or rely on spatio-temporal shortcuts such as geographic location and seasonal patterns  
 
 This lack of understanding raises concerns about the reliability and generalizability of such models in real-world deployment.
----
-
-## Research Challenges
-
-- Flood events are **spatially heterogeneous**  
-- Flood duration varies across locations  
-- Labels derived from SAR imagery may contain noise  
-- Strong **distribution shift** between regions  
-- Temporal patterns differ across years  
 
 ---
+
+
 
 ## Core Contribution
 
@@ -175,7 +168,18 @@ Special attention is given to potential risks:
 - Distribution shift across regions and time  
 
 ---
-## Expected Model Behavior
+
+## Research Challenges
+
+- Flood events are **spatially heterogeneous**  
+- Flood duration varies across locations  
+- Labels derived from SAR imagery may contain noise  
+- Strong **distribution shift** between regions  
+- Temporal patterns differ across years  
+
+---
+
+## Research Hypotheses
 
 We hypothesize that:
 
@@ -204,17 +208,17 @@ To address the research questions and validate the hypotheses, this study employ
 
 ### 1. Data Collection
 
-Multi-source geospatial datasets are collected to represent environmental, topographic, and hydrological conditions.
+Multi-source geospatial datasets are collected to capture the environmental, topographic, and hydrological factors influencing flood occurrence.
 
 **Data sources include:**
-- Rainfall data (CHIRPS / NASA)
-- Elevation data (SRTM DEM)
-- Land use / land cover (ESA WorldCover)
-- River networks (OpenStreetMap)
-- Satellite imagery (Sentinel-1 SAR)
+- Rainfall data (CHIRPS / NASA)  
+- Elevation data (SRTM DEM)  
+- Land use / land cover (ESA WorldCover)  
+- River networks (OpenStreetMap)  
+- Satellite imagery (Sentinel-1 SAR)  
 
-**Key objective:**
-To build a consistent and aligned geospatial dataset across space and time.
+**Objective:**
+To construct a consistent and spatially aligned dataset that integrates multiple data sources across both space and time.
 
 ---
 
@@ -236,6 +240,8 @@ Flood labels are generated using **Sentinel-1 SAR imagery**, which enables water
 - All affected grid cells during the event are labeled as flood  
 - Pre-flood conditions are captured using rainfall accumulation features  
 
+This event-based labeling strategy enables the model to learn temporal flood dynamics rather than relying on single-day observations.
+
 ---
 
 ### 3. Preprocessing
@@ -248,8 +254,8 @@ Raw geospatial data is cleaned and aligned to ensure consistency.
 - Coordinate system standardization  
 - Temporal alignment across datasets  
 
-**Output:**
-A clean and spatially aligned dataset ready for feature extraction.
+**Objective:**
+To produce a clean, consistent, and spatially aligned dataset suitable for downstream modeling.
 
 ---
 
@@ -275,6 +281,9 @@ Relevant features are derived to capture the physical processes of flooding.
 **Spatial features:**
 - Latitude and longitude (used specifically for spatial bias analysis)
 
+**Objective:**
+To construct informative features that reflect both environmental conditions and flood-generating processes.
+
 ---
 
 ### 5. Modeling
@@ -287,14 +296,17 @@ Machine learning models are trained using tabular geospatial features.
 
 **Rationale:**
 - Robust for tabular data  
-- Handle non-linear relationships  
+- Capable of modeling non-linear relationships  
 - Provide feature importance for interpretability  
+
+**Objective:**
+To learn predictive relationships between geospatial features and flood occurrence.
 
 ---
 
 ### 6. Evaluation
 
-Model performance is evaluated under multiple scenarios to assess generalization and robustness.
+Model performance is evaluated not only in terms of predictive accuracy, but also in terms of generalization and robustness.
 
 **Metrics:**
 - Accuracy  
@@ -314,6 +326,9 @@ Model performance is evaluated under multiple scenarios to assess generalization
 - Spatial bias testing (with vs without coordinates)  
 - Error analysis (false positives and false negatives)  
 - Sensitivity to data variation  
+
+**Objective:**
+To assess model performance, generalization capability, and robustness under varying spatial and temporal conditions.
 
 ---
 
