@@ -27,6 +27,25 @@ This project addresses these limitations by explicitly evaluating:
 - Failure modes and robustness  
 
 ---
+## Problem Statement
+
+Despite the increasing use of machine learning for flood prediction, it remains unclear whether these models:
+
+- Learn physically meaningful relationships between environmental variables  
+- Or rely on spatio-temporal shortcuts such as geographic location and seasonal patterns  
+
+This lack of understanding raises concerns about the reliability and generalizability of such models in real-world deployment.
+---
+
+## Research Challenges
+
+- Flood events are **spatially heterogeneous**  
+- Flood duration varies across locations  
+- Labels derived from SAR imagery may contain noise  
+- Strong **distribution shift** between regions  
+- Temporal patterns differ across years  
+
+---
 
 ## Core Contribution
 
@@ -44,6 +63,15 @@ This research contributes by:
 - **Training Region:** Makassar, Indonesia  
 - **Testing Region:** Jakarta, Indonesia  
 
+### Rationale for Region Selection
+
+Makassar and Jakarta are selected because:
+
+- Both are flood-prone urban areas  
+- They exhibit different topographic and hydrological characteristics  
+- Data availability is relatively consistent across both regions  
+
+This enables controlled evaluation of spatial generalization under realistic conditions.
 ---
 
 ## Dataset Design
@@ -54,10 +82,17 @@ This project uses a **spatio-temporal dataset**, where each row represents:
 
 ---
 
+### Dataset Construction Details
+
+- Spatial resolution: 1 km × 1 km grid  
+- Temporal resolution: daily observations  
+- Each grid cell represents a spatial unit observed at a specific date  
+- Features are extracted based on geographic location  
+- Flood labels are assigned using Sentinel-1 detection  
+
 ### Dataset Structure
 
 | lat | lon | date | rainfall | rainfall_3day | rainfall_7day | elevation | slope | landuse | distance_river | flood | region |
-|-----|-----|------|----------|----------------|----------------|-----------|--------|----------|----------------|--------|--------|
 
 ---
 
@@ -123,27 +158,202 @@ Flood labels are derived from **Sentinel-1 SAR imagery** using:
 
 ## Temporal Design
 
-- Time range: **2018 – 2022**
+- Time range: 2018 – 2022  
 
 ### Data Split
-
 - Train: 2018–2020  
 - Test: 2021–2022  
 
 ---
 
-## Research Challenges
+## Data Considerations (Critical for Validity)
 
-- Flood events are **spatially heterogeneous**  
-- Flood duration varies across locations  
-- Labels derived from SAR imagery may contain noise  
-- Strong **distribution shift** between regions  
-- Temporal patterns differ across years  
+Special attention is given to potential risks:
+
+- Spatial leakage due to geographic coordinates (lat/lon)  
+- Temporal leakage from overlapping rainfall aggregation  
+- Distribution shift across regions and time  
+
+---
+## Expected Model Behavior
+
+We hypothesize that:
+
+- Models will perform well in-domain but degrade significantly out-of-domain  
+- Models using geographic coordinates will outperform others but exhibit spatial bias  
+- Rainfall features will dominate predictions, but may not generalize across regions 
 
 ---
 
+## Evaluation Criteria
+
+Model performance is assessed not only by predictive accuracy, but by:
+
+- Generalization gap (in-domain vs out-of-domain performance)
+- Stability across temporal splits
+- Consistency of feature importance across regions
+- Sensitivity to removal of spatial coordinates
+
+A model is considered reliable if it maintains performance and interpretability under these conditions.
+
+---
+
+## Methodology
+
+To address the research questions and validate the hypotheses, this study employs a structured experimental pipeline for developing and evaluating a spatio-temporal flood prediction framework using multi-source geospatial data.
+
+### 1. Data Collection
+
+Multi-source geospatial datasets are collected to represent environmental, topographic, and hydrological conditions.
+
+**Data sources include:**
+- Rainfall data (CHIRPS / NASA)
+- Elevation data (SRTM DEM)
+- Land use / land cover (ESA WorldCover)
+- River networks (OpenStreetMap)
+- Satellite imagery (Sentinel-1 SAR)
+
+**Key objective:**
+To build a consistent and aligned geospatial dataset across space and time.
+
+---
+
+### 2. Flood Label Generation
+
+Flood labels are generated using **Sentinel-1 SAR imagery**, which enables water detection regardless of cloud conditions.
+
+**Method:**
+- Backscatter thresholding to detect water surfaces  
+- Temporal comparison (before vs during flood events)  
+- Identification of flood-affected areas  
+
+**Label definition:**
+- `flood = 1` → water detected (flood condition)  
+- `flood = 0` → no water detected  
+
+**Event-based approach:**
+- Flood events may span multiple consecutive days  
+- All affected grid cells during the event are labeled as flood  
+- Pre-flood conditions are captured using rainfall accumulation features  
+
+---
+
+### 3. Preprocessing
+
+Raw geospatial data is cleaned and aligned to ensure consistency.
+
+**Steps:**
+- Handling missing values  
+- Spatial resampling to a common resolution (e.g., 1 km grid)  
+- Coordinate system standardization  
+- Temporal alignment across datasets  
+
+**Output:**
+A clean and spatially aligned dataset ready for feature extraction.
+
+---
+
+### 4. Feature Engineering
+
+Relevant features are derived to capture the physical processes of flooding.
+
+**Temporal features:**
+- Daily rainfall  
+- 3-day accumulated rainfall  
+- 7-day accumulated rainfall  
+
+**Topographic features:**
+- Elevation (from DEM)  
+- Slope (derived from DEM)  
+
+**Hydrological features:**
+- Distance to nearest river  
+
+**Land features:**
+- Land use encoding  
+
+**Spatial features:**
+- Latitude and longitude (used specifically for spatial bias analysis)
+
+---
+
+### 5. Modeling
+
+Machine learning models are trained using tabular geospatial features.
+
+**Models used:**
+- Random Forest  
+- XGBoost  
+
+**Rationale:**
+- Robust for tabular data  
+- Handle non-linear relationships  
+- Provide feature importance for interpretability  
+
+---
+
+### 6. Evaluation
+
+Model performance is evaluated under multiple scenarios to assess generalization and robustness.
+
+**Metrics:**
+- Accuracy  
+- Precision  
+- Recall  
+- F1-score  
+- ROC-AUC  
+- Confusion Matrix  
+
+**Evaluation scenarios:**
+- In-domain (train and test on the same region)  
+- Cross-region (train on Makassar, test on Jakarta)  
+- Temporal generalization (train on earlier years, test on later years)  
+
+**Additional analysis:**
+- Feature importance comparison  
+- Spatial bias testing (with vs without coordinates)  
+- Error analysis (false positives and false negatives)  
+- Sensitivity to data variation  
+
+---
+
+## Experimental Design
+
+### 1. Baseline Performance (In-Domain)
+- Train and test on Makassar  
+- Establish baseline model performance  
+
+### 2. Cross-Region Generalization
+- Train on Makassar  
+- Test on Jakarta  
+- Measure performance degradation  
+
+### 3. Temporal Generalization
+- Train on 2018–2020  
+- Test on 2021–2022  
+- Evaluate robustness over time  
+
+### 4. Feature Importance Analysis
+- Analyze dominant features  
+- Compare importance across regions  
+
+### 5. Spatial Bias Test (Core Experiment)
+- Model A: with lat/lon  
+- Model B: without lat/lon  
+- Evaluate dependence on spatial coordinates  
+
+### 6. Error Analysis
+- Analyze false positives and false negatives  
+- Identify spatial distribution of errors  
+
+### 7. Sensitivity Analysis
+- Reduce training data size  
+- Introduce noise  
+- Evaluate robustness under data variation  
+---
 ## Project Structure
 
+```text
 flood-ml-research/
 │
 ├── data/
@@ -173,31 +383,7 @@ flood-ml-research/
 ├── main.py
 ├── requirements.txt
 └── README.md
-
----
-
-## Methodology
-
-1. Data Collection  
-2. Flood Label Generation  
-3. Preprocessing  
-4. Feature Engineering  
-5. Modeling (Random Forest, XGBoost)  
-6. Evaluation  
-
----
-
-## Experimental Design
-
-- Baseline (in-domain)  
-- Cross-region generalization  
-- Temporal generalization  
-- Feature importance analysis  
-- Spatial bias test  
-- Error analysis  
-- Sensitivity analysis  
-
----
+```
 
 ## Installation
 
@@ -212,6 +398,15 @@ pip install -r requirements.txt
 python main.py  
 
 ---
+## Reproducibility
+
+All experiments are designed to be reproducible:
+
+- Fixed random seeds for model training  
+- Consistent preprocessing pipeline  
+- Structured experiment tracking via notebooks and scripts  
+
+Results can be reproduced from raw data using the provided pipeline.
 
 ## Final Note
 
