@@ -89,6 +89,20 @@ This project uses a **spatio-temporal dataset**, where each row represents:
 ### Dataset Structure
 
 | lat | lon | date | rainfall | rainfall_3day | rainfall_7day | elevation | slope | landuse | distance_river | flood | region |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+
+**Column Description:**
+
+- `lat`, `lon`: Geographic coordinates  
+- `date`: Observation date (YYYY-MM-DD)  
+- `rainfall`: Daily rainfall  
+- `rainfall_3day`, `rainfall_7day`: Accumulated rainfall over past days  
+- `elevation`: Height above sea level  
+- `slope`: Terrain slope  
+- `landuse`: Land cover category  
+- `distance_river`: Distance to nearest river  
+- `flood`: Binary label (1 = flood, 0 = no flood)  
+- `region`: Study area identifier  
 
 ---
 
