@@ -1,232 +1,222 @@
-# Flood Prediction Research using Machine Learning and Geospatial Data
+# Flood Prediction using Machine Learning and Geospatial Data
 
 ## Overview
 
-This project focuses on evaluating the **generalization** and **interpretability** of machine learning models for flood prediction using geospatial data.
+This repository contains a research-driven project focused on evaluating the **generalization**, **temporal robustness**, and **spatial bias** of machine learning models for flood prediction using multi-source geospatial data.
 
-Unlike typical projects that aim to achieve the highest accuracy, this research emphasizes:
+Unlike conventional flood prediction systems that focus solely on maximizing predictive accuracy, this study aims to answer a more fundamental question:
 
-* Understanding how models behave across different regions
-* Identifying limitations and failure cases
-* Analyzing whether models truly learn physical patterns or just memorize spatial data
+> Do machine learning models truly learn the physical processes of flooding, or do they rely on spatio-temporal shortcuts such as location and seasonal patterns?
 
 ---
 
-## Research Objective
+## Research Motivation
 
-The main objective of this project is to:
+Most flood prediction models are evaluated within a single region and time period, resulting in models that:
 
-* Evaluate model performance in both **in-domain** (same region) and **out-of-domain** (different region) scenarios
-* Analyze feature importance and model decision-making
-* Identify when and why models fail
-* Provide insights for real-world deployment of flood prediction systems
+- Perform well locally but fail in new regions  
+- Overfit to spatial patterns (e.g., coordinates)  
+- Fail to generalize across time (different years)  
+
+This project addresses these limitations by explicitly evaluating:
+
+- Cross-region generalization (Makassar → Jakarta)  
+- Cross-year generalization (2018–2020 → 2021–2022)  
+- Model interpretability and feature importance  
+- Spatial bias and reliance on geographic coordinates  
+- Failure modes and robustness  
+
+---
+
+## Core Contribution
+
+This research contributes by:
+
+- Providing empirical evidence of **spatial bias** in geospatial machine learning models  
+- Evaluating model generalization across both **space and time**  
+- Demonstrating the limitations of conventional flood prediction approaches  
+- Proposing a **spatio-temporal experimental framework** for evaluating model behavior  
 
 ---
 
 ## Study Areas
 
-* **Training Region:** Makassar, Indonesia
-* **Testing Region:** Jakarta, Indonesia (and optionally other regions)
-
-This setup allows evaluation of model generalization across different geographic conditions.
+- **Training Region:** Makassar, Indonesia  
+- **Testing Region:** Jakarta, Indonesia  
 
 ---
 
-## Dataset
+## Dataset Design
 
-The dataset is constructed from multiple geospatial data sources:
+This project uses a **spatio-temporal dataset**, where each row represents:
 
-### Features:
+> A specific location at a specific time
 
-* Rainfall
-* Elevation (DEM)
-* Slope
-* Land use / land cover
-* Distance to river
+---
 
-### Target:
+### Dataset Structure
 
-* Flood occurrence (0 = no flood, 1 = flood)
+| lat | lon | date | rainfall | rainfall_3day | rainfall_7day | elevation | slope | landuse | distance_river | flood | region |
+|-----|-----|------|----------|----------------|----------------|-----------|--------|----------|----------------|--------|--------|
 
-### Data Sources:
+---
 
-* Rainfall: CHIRPS / NASA
-* Elevation: SRTM (DEM)
-* Land Use: ESA WorldCover
-* Rivers: OpenStreetMap
-* Flood labels: reports, news, or manual labeling
+## Flood Labeling Strategy (Critical)
+
+Flood labeling is based on **spatio-temporal flood events**, not single-day observations.
+
+### Key Principles
+
+- Flood events may span **multiple consecutive days**  
+- All affected grid cells during an event are labeled `flood = 1`  
+- Non-flood conditions are labeled `flood = 0`  
+
+### Event-Based Temporal Window
+
+Each flood sample includes:
+
+- Pre-flood window: **3–7 days before flood event**  
+- Flood window: duration of observed flooding  
+
+This allows the model to learn **precursor signals**, not just flood occurrence.
+
+### Flood Detection Method
+
+Flood labels are derived from **Sentinel-1 SAR imagery** using:
+
+- Water detection via backscatter thresholding  
+- Temporal comparison (before vs during flood)  
+
+---
+
+## Feature Description
+
+### Environmental Features
+- `rainfall`: daily rainfall  
+- `rainfall_3day`: 3-day accumulated rainfall  
+- `rainfall_7day`: 7-day accumulated rainfall  
+
+### Topographic Features
+- `elevation`: height above sea level (DEM)  
+- `slope`: terrain slope  
+
+### Land Features
+- `landuse`: land cover classification  
+
+### Hydrological Features
+- `distance_river`: distance to nearest river  
+
+### Spatial Features
+- `lat`, `lon`: geographic coordinates (used for bias analysis)  
+
+---
+
+## Data Sources
+
+- Rainfall: CHIRPS / NASA  
+- Elevation: SRTM (DEM)  
+- Land Use: ESA WorldCover  
+- River Data: OpenStreetMap  
+- Flood Detection: Sentinel-1 (Google Earth Engine)  
+
+---
+
+## Temporal Design
+
+- Time range: **2018 – 2022**
+
+### Data Split
+
+- Train: 2018–2020  
+- Test: 2021–2022  
+
+---
+
+## Research Challenges
+
+- Flood events are **spatially heterogeneous**  
+- Flood duration varies across locations  
+- Labels derived from SAR imagery may contain noise  
+- Strong **distribution shift** between regions  
+- Temporal patterns differ across years  
 
 ---
 
 ## Project Structure
 
-```
 flood-ml-research/
 │
 ├── data/
-│   ├── raw/            # Raw geospatial data
-│   ├── processed/      # Cleaned dataset
-│   └── external/       # Additional data sources
-│
-├── notebooks/          # Jupyter notebooks for experiments
+│   ├── raw/
+│   ├── processed/
+│   └── external/
 │
 ├── src/
-│   ├── data/           # Data loading & processing scripts
-│   ├── features/       # Feature engineering
-│   ├── models/         # Model training
-│   └── visualization/  # Visualization tools
+│   ├── data/
+│   ├── features/
+│   ├── models/
+│   └── visualization/
 │
+├── models/
+│   ├── baseline/
+│   ├── generalization/
+│   └── spatial_bias/
+│
+├── notebooks/
 ├── results/
-│   ├── figures/        # Plots and maps
-│   └── metrics/        # Evaluation results
+│   ├── figures/
+│   └── metrics/
 │
 ├── docs/
 │   └── research_proposal.md
 │
-├── models/             # Saved models
-│
+├── main.py
 ├── requirements.txt
-├── README.md
-└── main.py
-```
+└── README.md
 
 ---
 
 ## Methodology
 
-### 1. Data Collection
-
-Collect multi-source geospatial data.
-
-### 2. Preprocessing
-
-* Data cleaning
-* Handling missing values
-* Spatial alignment
-
-### 3. Feature Engineering
-
-* Slope calculation
-* Distance to river
-* Land use encoding
-
-### 4. Modeling
-
-* Random Forest
-* XGBoost
-
-### 5. Evaluation
-
-* Accuracy
-* Precision
-* Recall
-* F1-score
-* ROC-AUC
+1. Data Collection  
+2. Flood Label Generation  
+3. Preprocessing  
+4. Feature Engineering  
+5. Modeling (Random Forest, XGBoost)  
+6. Evaluation  
 
 ---
 
-## Experiments
+## Experimental Design
 
-* **Baseline Test** (train & test on same region)
-* **Generalization Test** (train on Makassar, test on other regions)
-* **Feature Importance Analysis**
-* **Data Sensitivity Analysis**
-* **Error Analysis**
-* **Bias Analysis**
-
----
-
-## Key Focus
-
-This project does NOT aim to build the best-performing model.
-
-Instead, it focuses on:
-
-* Model generalization
-* Model interpretability
-* Failure analysis
-* Real-world applicability
+- Baseline (in-domain)  
+- Cross-region generalization  
+- Temporal generalization  
+- Feature importance analysis  
+- Spatial bias test  
+- Error analysis  
+- Sensitivity analysis  
 
 ---
 
 ## Installation
 
-Clone the repository:
-
-```
-git clone https://github.com/your-username/flood-ml-research.git
-cd flood-ml-research
-```
-
-Install dependencies:
-
-```
-pip install -r requirements.txt
-```
+git clone https://github.com/Aepra/flood-ml-research.git  
+cd flood-ml-research  
+pip install -r requirements.txt  
 
 ---
 
 ## Usage
 
-Run main pipeline:
-
-```
-python main.py
-```
-
-Or use notebooks:
-
-```
-notebooks/
-```
+python main.py  
 
 ---
 
-## Expected Outputs
+## Final Note
 
-* Trained machine learning models
-* Evaluation metrics
-* Feature importance analysis
-* Flood risk maps
-* Insight into model behavior
+The hardest part of this research is not building the model, but:
 
----
-
-## Limitations
-
-* Flood data availability may be limited
-* Model performance depends heavily on data quality
-* Cross-region generalization is inherently challenging
-
----
-
-## Future Work
-
-* Use deep learning models
-* Incorporate temporal data (time-series rainfall)
-* Expand to more regions
-* Improve flood labeling accuracy
-
----
-
-## Author
-
-* Name: Abel Eka Putra
-* Program: Information Systems
-* University: Universitas Hasanuddin
-
----
-
-## Notes
-
-The most challenging part of this project is not coding, but:
-
-* Interpreting results
-* Extracting meaningful insights
-* Explaining model behavior
-
----
-
-## License
-
-This project is for academic and research purposes.
+- Interpreting results  
+- Understanding model behavior  
+- Drawing meaningful conclusions  
