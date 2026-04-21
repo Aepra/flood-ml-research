@@ -105,20 +105,12 @@ def open_vscode_remote():
     
     # Open with remote container
     try:
-        subprocess.Popen(["code", "--folder-uri", "vscode-remote://dev-container%2B.%2B%2Fproject/flood-ml-research"])
+        subprocess.Popen(["code", "."])
         return True
-    exceprint("\n✅ Container siap!")
-        if open_vscode_remote():
-            print("✨ VS Code dengan remote container terbuka!")
-            print("📝 Kernel dari container sudah siap digunakan")
-            print("💡 Pilih kernel: Ctrl+Shift+P → 'Jupyter: Select Kernel'")
-        
-    elif choice == "2":
-        start_container()
-        open_jupyter()
-        print("\n✨ Jupyter Lab siap! Buka URL di browser Anda.\n")
-        
-    elif choice == "3
+    except:
+        print("⚠️  VS Code buka manual: Ctrl+Shift+P → 'Remote-Containers: Reopen in Container'")
+        return False
+
 def interactive_menu():
     """Show interactive menu"""
     print_banner()
@@ -134,7 +126,23 @@ def interactive_menu():
     print("4️⃣  Jalankan Python script")
     print("5️⃣  Stop container")
     print("6️⃣  Keluar\n")
-    3":
+    
+    choice = input("Pilihan (1-6): ").strip()
+    
+    if choice == "1":
+        start_container()
+        print("\n✅ Container siap!")
+        if open_vscode_remote():
+            print("✨ VS Code dengan remote container terbuka!")
+            print("📝 Kernel dari container sudah siap digunakan")
+            print("💡 Pilih kernel: Ctrl+Shift+P → 'Jupyter: Select Kernel'")
+        
+    elif choice == "2":
+        start_container()
+        open_jupyter()
+        print("\n✨ Jupyter Lab siap! Buka URL di browser Anda.\n")
+        
+    elif choice == "3":
         if not notebooks:
             print("❌ Tidak ada notebook ditemukan!")
             return
@@ -171,15 +179,7 @@ def interactive_menu():
         subprocess.run(["docker-compose", "down"])
         print("✅ Container dihentikan!\n")
         
-    elif choice == "6Error, IndexError):
-            print("❌ Pilihan tidak valid!")
-            
-    elif choice == "4":
-        print("\n⏹️  Menghentikan container...\n")
-        subprocess.run(["docker-compose", "down"])
-        print("✅ Container dihentikan!\n")
-        
-    elif choice == "5":
+    elif choice == "6":
         print("👋 Bye!\n")
         sys.exit(0)
     else:
