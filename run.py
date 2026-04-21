@@ -88,27 +88,66 @@ def open_jupyter():
             return
     print("⚠️  Buka: http://localhost:8888")
 
+def find_vscode():
+    """Find VS Code installation path"""
+    system = platform.system()
+    
+    if system == "Windows":
+        # Common VS Code paths on Windows
+        paths = [
+            "C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd",
+            "C:\\Program Files (x86)\\Microsoft VS Code\\bin\\code.cmd",
+            os.path.expanduser("~\\AppData\\Local\\Programs\\Microsoft VS Code\\bin\\code.cmd"),
+        ]
+        
+        # Try each path
+        for path in paths:
+            if os.path.exists(path):
+                return path
+        
+        # Try to find via command
+        try:
+            result = subprocess.run(["where", "code"], capture_output=True, text=True, check=True)
+            return result.stdout.strip().split('\n')[0]
+        except:
+            pass
+    
+    else:  # Linux/Mac
+        try:
+            result = subprocess.run(["which", "code"], capture_output=True, text=True, check=True)
+            return result.stdout.strip()
+        except:
+            pass
+    
+    return None
+
 def open_vscode_remote():
     """Open VS Code with Remote Container extension"""
     print("\n🔌 Membuka VS Code dengan remote container...\n")
     
-    # Check VS Code is installed
-    try:
-        if platform.system() == "Windows":
-            subprocess.run(["code", "--version"], capture_output=True, check=True)
-        else:
-            subprocess.run(["code", "--version"], capture_output=True, check=True)
-    except:
-        print("❌ VS Code tidak terinstall!")
-        print("Download dari: https://code.visualstudio.com")
+    # Find VS Code
+    code_path = find_vscode()
+    
+    if not code_path:
+        print("❌ VS Code tidak ditemukan di PATH!")
+        print("\n📝 Solusi:")
+        print("  1. Pastikan VS Code sudah ter-install")
+        print("  2. Restart komputer (agar PATH ter-update)")
+        print("  3. Atau buka VS Code secara manual:")
+        print("     - Buka folder project di VS Code")
+        print("     - Ctrl+Shift+P → 'Remote-Containers: Reopen in Container'")
         return False
     
     # Open with remote container
     try:
-        subprocess.Popen(["code", "."])
+        subprocess.Popen([code_path, "."])
+        print("✅ VS Code terbuka!")
         return True
-    except:
-        print("⚠️  VS Code buka manual: Ctrl+Shift+P → 'Remote-Containers: Reopen in Container'")
+    except Exception as e:
+        print(f"⚠️  Tidak bisa membuka VS Code otomatis: {e}")
+        print("\n💡 Buka VS Code manual:")
+        print("   - Buka folder project di VS Code")
+        print("   - Ctrl+Shift+P → 'Remote-Containers: Reopen in Container'")
         return False
 
 def interactive_menu():
@@ -132,10 +171,17 @@ def interactive_menu():
     if choice == "1":
         start_container()
         print("\n✅ Container siap!")
-        if open_vscode_remote():
+        result = open_vscode_remote()
+        if result:
             print("✨ VS Code dengan remote container terbuka!")
-            print("📝 Kernel dari container sudah siap digunakan")
-            print("💡 Pilih kernel: Ctrl+Shift+P → 'Jupyter: Select Kernel'")
+            print("📝 Tunggu beberapa saat hingga extension ter-install...")
+            print("💡 Setelah selesai, pilih kernel: Ctrl+Shift+P → 'Jupyter: Select Kernel'")
+        else:
+            print("\n💡 Setup manual:")
+            print("   1. Buka folder project ini di VS Code")
+            print("   2. Ctrl+Shift+P → 'Remote-Containers: Reopen in Container'")
+            print("   3. Tunggu container ter-attach")
+            print("   4. Buka notebook dan pilih kernel!")
         
     elif choice == "2":
         start_container()
