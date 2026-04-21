@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  flood-ml:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flood-ml-research
+    volumes:
+      # Mount data directory
+      - ./data:/app/data
+      # Mount results directory
+      - ./results:/app/results
+      # Mount models directory
+      - ./models:/app/models
+      # Mount notebooks for Jupyter access
+      - ./notebooks:/app/notebooks
+      # Mount src directory
+      - ./src:/app/src
+    ports:
+      # Jupyter Lab port
+      - "8888:8888"
+      # Tensorboard port (if needed)
+      - "6006:6006"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - PYTHONUNBUFFERED=1
+    working_dir: /app
+    command: >
+      bash -c "
+        pip install jupyter-lab ipywidgets nbconvert --no-cache-dir &&
+        mkdir -p /app/notebooks/outputs &&
+        jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root
+      "

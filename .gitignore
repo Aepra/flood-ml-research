@@ -1,5 +1,23 @@
 __pycache__/
 *.pyc
 .env
+.ipynb_checkpoints/
+notebooks/cache/
+notebooks/outputs/
 data/raw/*
+data/external/*
+data/processed/*.csv
+data/processed/*.parquet
 models/*
+results/logs/*
+results/metrics/*
+results/figures/*
+.DS_Store
+*.log
+.pytest_cache/
+
+# Large files - use Git LFS or cloud storage
+*.gpkg
+*.geojson
+*.tif
+*.nc

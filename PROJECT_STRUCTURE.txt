@@ -1,0 +1,42 @@
+================================================================================
+   FLOOD ML RESEARCH - PROJECT STRUCTURE (CURRENT STATE)
+   Diagnostic Framework for Spatio-Temporal Shortcut Learning
+================================================================================
+
+flood-ml-research/
+│
+├── 📄 ROOT FILES
+│   ├── README.md                     # Project overview (selesai)
+│   ├── main.py
+│   ├── requirements.txt
+│   ├── .git/
+│   └── .gitignore
+│
+├── 📁 docs/ — DOCUMENTATION (SELESAI)
+│   ├── research_proposal.md          # Research proposal lengkap (selesai)
+│   ├── DATASET_SPECIFICATION.md      # Dataset specification (selesai)
+│   └── proposal.docx                 # Backup Word version
+│
+├── 📁 data/ — DATA STORAGE (PLACEHOLDER)
+│   ├── raw/                          # Original data
+│   ├── processed/                    # Cleaned data
+│   └── external/                     # Reference data
+│
+├── 📁 src/ — SOURCE CODE (BELUM)
+│   ├── data/                         # Data loading & preprocessing
+│   ├── features/                     # Feature engineering
+│   ├── models/                       # Model training & evaluation
+│   └── visualization/                # Plotting & analysis
+│
+├── 📁 models/ — MODEL ARTIFACTS (BELUM)
+│   ├── random_forest/
+│   └── xgboost/
+│
+├── 📁 notebooks/ — JUPYTER (BELUM)
+│   └── (akan dibuat nanti)
+│
+└── 📁 results/ — OUTPUTS (BELUM)
+    ├── metrics/
+    └── figures/
+
+
