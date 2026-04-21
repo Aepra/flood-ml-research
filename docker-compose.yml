@@ -6,22 +6,15 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: flood-ml-research
+    image: flood-ml:latest
     volumes:
-      # Mount data directory
       - ./data:/app/data
-      # Mount results directory
       - ./results:/app/results
-      # Mount models directory
       - ./models:/app/models
-      # Mount notebooks for Jupyter access
       - ./notebooks:/app/notebooks
-      # Mount src directory
       - ./src:/app/src
     ports:
-      # Jupyter Lab port
       - "8888:8888"
-      # Tensorboard port (if needed)
-      - "6006:6006"
     environment:
       - JUPYTER_ENABLE_LAB=yes
       - PYTHONUNBUFFERED=1
@@ -32,3 +25,5 @@ services:
         mkdir -p /app/notebooks/outputs &&
         jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root
       "
+    stdin_open: true
+    tty: true

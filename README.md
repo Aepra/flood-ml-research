@@ -1,15 +1,131 @@
-# A Diagnostic Framework for Quantifying Spatio-Temporal Shortcut Learning in Machine Learning-Based Flood Prediction Under Cross-Regional and Temporal Distribution Shifts
+# 🌊 Flood ML Research
 
-**Status:** 🚧 In Development | **Target:** Q1 Conference/Journal
+**A Diagnostic Framework for Quantifying Spatio-Temporal Shortcut Learning in Machine Learning-Based Flood Prediction**
 
 ---
 
-## 📋 Quick Navigation
+## 🚀 QUICK START - 2 Steps!
 
-- **[Research Proposal](docs/research_proposal.md)** — Full research methodology & framework
-- **[Dataset Specification](docs/DATASET_SPECIFICATION.md)** — Technical dataset details (ST-FSLD v1.0)
-- **[Project Structure](STRUCTURE.md)** — Directory organization & workflows
-- **[Data Sources](docs/research_proposal.md#7-data-sources)** — CHIRPS, SRTM, ESA WorldCover, OpenStreetMap, Sentinel-1
+### Step 1: Clone
+```bash
+git clone https://github.com/Aepra/flood-ml-research.git
+cd flood-ml-research
+```
+
+### Step 2: Run ONE command
+
+**Windows:**
+```bash
+start.bat
+```
+
+**Linux/Mac:**
+```bash
+./start.sh
+```
+
+**Wait for this message:**
+```
+flood-ml  | http://127.0.0.1:8888/lab?token=xxxxxxxxxxxxx
+```
+
+**Copy that URL and open in browser.** Done! ✅
+
+---
+
+## 📋 What Happens Next
+
+1. **Jupyter Lab opens** in your browser
+2. **Navigate to:** `notebooks/` folder
+3. **Click on:** any `.ipynb` file
+4. **Click ▶️ Run** - everything works!
+
+All modules automatically installed. Nothing else to do.
+
+---
+
+## ✅ Included Notebooks
+
+- `00a_grid_generation.ipynb` - Create 250m spatial grid
+- `00b_spatiotemporal_schema.ipynb` - Build ST base dataset
+- `00c_flood_labeling.ipynb` - Label flood events
+
+All ready to run immediately!
+
+---
+
+## 📁 Data Structure
+
+Your computer only saves important stuff:
+```
+flood-ml-research/
+├── notebooks/     ← .ipynb files (your work)
+├── data/          ← Input data
+├── results/       ← Outputs (figures, metrics)
+└── models/        ← Trained models
+```
+
+**Everything else runs in Docker** - won't clutter your computer!
+
+---
+
+## 🛑 Stop & Clean Up
+
+**Stop Jupyter:**
+```
+Ctrl+C in terminal
+```
+
+**Remove container (but keep your data):**
+```bash
+docker-compose down
+```
+
+---
+
+## 📖 Full Documentation
+
+- **[Quick Start Guide](README_QUICKSTART.md)** - Detailed instructions
+- **[Research Proposal](docs/research_proposal.md)** - Full research methodology
+- **[Dataset Spec](docs/DATASET_SPECIFICATION.md)** - Data documentation
+- **[Pipeline](docs/PIPELINE.md)** - Data processing workflow
+
+---
+
+## 🎯 Research Question
+
+> Do ML flood prediction models learn physical processes, or do they rely on spatio-temporal shortcuts (location memorization, seasonal patterns)?
+
+---
+
+## ✅ Prerequisites
+
+- **Docker Desktop** (free) - [download here](https://docker.com/products/docker-desktop)
+- **Git** - [download here](https://git-scm.com)
+- **~2GB disk space**
+
+---
+
+## ⚠️ Troubleshooting
+
+| Problem | Fix |
+|---------|-----|
+| Docker not found | Install Docker Desktop |
+| Port 8888 in use | Edit `docker-compose.yml`, change 8888 → 8889 |
+| Module not found | Restart: `docker-compose down` then `start.bat` |
+| Slow first run | Normal (5-10 min) - installing Python + packages |
+
+---
+
+## 🤔 Questions?
+
+See [README_QUICKSTART.md](README_QUICKSTART.md) for complete troubleshooting guide
+
+---
+
+**Status:** 🚧 In Development | **Target:** Q1 Conference/Journal
+
+**Last updated:** April 2026 | Made with ❤️ for reproducible research
 
 ---
 
