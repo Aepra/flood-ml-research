@@ -7,6 +7,7 @@ One command to run everything!
 import os
 import subprocess
 import sys
+import platform
 from pathlib import Path
 
 def print_banner():
@@ -87,6 +88,37 @@ def open_jupyter():
             return
     print("⚠️  Buka: http://localhost:8888")
 
+def open_vscode_remote():
+    """Open VS Code with Remote Container extension"""
+    print("\n🔌 Membuka VS Code dengan remote container...\n")
+    
+    # Check VS Code is installed
+    try:
+        if platform.system() == "Windows":
+            subprocess.run(["code", "--version"], capture_output=True, check=True)
+        else:
+            subprocess.run(["code", "--version"], capture_output=True, check=True)
+    except:
+        print("❌ VS Code tidak terinstall!")
+        print("Download dari: https://code.visualstudio.com")
+        return False
+    
+    # Open with remote container
+    try:
+        subprocess.Popen(["code", "--folder-uri", "vscode-remote://dev-container%2B.%2B%2Fproject/flood-ml-research"])
+        return True
+    exceprint("\n✅ Container siap!")
+        if open_vscode_remote():
+            print("✨ VS Code dengan remote container terbuka!")
+            print("📝 Kernel dari container sudah siap digunakan")
+            print("💡 Pilih kernel: Ctrl+Shift+P → 'Jupyter: Select Kernel'")
+        
+    elif choice == "2":
+        start_container()
+        open_jupyter()
+        print("\n✨ Jupyter Lab siap! Buka URL di browser Anda.\n")
+        
+    elif choice == "3
 def interactive_menu():
     """Show interactive menu"""
     print_banner()
@@ -96,20 +128,13 @@ def interactive_menu():
     scripts = get_scripts()
     
     print("Pilih aksi:\n")
-    print("1️⃣  Start container & buka Jupyter Lab")
-    print("2️⃣  Jalankan notebook")
-    print("3️⃣  Jalankan Python script")
-    print("4️⃣  Stop container")
-    print("5️⃣  Keluar\n")
-    
-    choice = input("Pilihan (1-5): ").strip()
-    
-    if choice == "1":
-        start_container()
-        open_jupyter()
-        print("\n✨ Jupyter Lab siap! Buka URL di browser Anda.\n")
-        
-    elif choice == "2":
+    print("1️⃣  Buka VS Code + Remote Container + Jupyter kernel")
+    print("2️⃣  Start container & buka Jupyter Lab (Browser)")
+    print("3️⃣  Jalankan notebook")
+    print("4️⃣  Jalankan Python script")
+    print("5️⃣  Stop container")
+    print("6️⃣  Keluar\n")
+    3":
         if not notebooks:
             print("❌ Tidak ada notebook ditemukan!")
             return
@@ -125,7 +150,7 @@ def interactive_menu():
         except (ValueError, IndexError):
             print("❌ Pilihan tidak valid!")
             
-    elif choice == "3":
+    elif choice == "4":
         if not scripts:
             print("❌ Tidak ada script ditemukan!")
             return
@@ -139,6 +164,14 @@ def interactive_menu():
             run_script(f"src/{script}")
             print(f"\n✅ Script selesai!\n")
         except (ValueError, IndexError):
+            print("❌ Pilihan tidak valid!")
+            
+    elif choice == "5":
+        print("\n⏹️  Menghentikan container...\n")
+        subprocess.run(["docker-compose", "down"])
+        print("✅ Container dihentikan!\n")
+        
+    elif choice == "6Error, IndexError):
             print("❌ Pilihan tidak valid!")
             
     elif choice == "4":

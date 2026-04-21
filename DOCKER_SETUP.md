@@ -15,24 +15,84 @@ run.bat
 ./run.sh
 ```
 
-**Itu saja!** ✨ Menu interaktif akan muncul, pilih apa yang mau dijalankan.
+**Itu saja!** ✨ Menu interaktif akan muncul dengan opsi pilihan.
+
+---
+
+## 🎯 **RECOMMENDED: VS Code + Remote Container**
+
+1️⃣ Install VS Code extension: **"Remote - Containers"** (ms-vscode-remote.remote-containers)
+
+2️⃣ Jalankan:
+```bash
+run.bat
+```
+
+3️⃣ Pilih **Opsi 1**: "Buka VS Code + Remote Container + Jupyter kernel"
+
+4️⃣ VS Code akan auto-open dengan:
+- ✅ Python kernel dari container
+- ✅ Semua module terinstall
+- ✅ Siap edit & run notebook
+
+5️⃣ Buka notebook → pilih kernel (Ctrl+Shift+P) → langsung jalankan!
 
 ---
 
 ## 📋 Menu Interaktif Pilihan
 
 ```
-1️⃣  Start container & buka Jupyter Lab
-2️⃣  Jalankan notebook (.ipynb)
-3️⃣  Jalankan Python script (.py)
-4️⃣  Stop container
-5️⃣  Keluar
+1️⃣  Buka VS Code + Remote Container + Jupyter kernel  ← RECOMMENDED!
+2️⃣  Start container & buka Jupyter Lab (Browser)
+3️⃣  Jalankan notebook
+4️⃣  Jalankan Python script
+5️⃣  Stop container
+6️⃣  Keluar
 ```
 
-### Contoh:
-- **Pilih 1** → Docker start + Jupyter Lab link
-- **Pilih 2** → Pilih notebook → auto execute
-- **Pilih 3** → Pilih script → auto execute
+---
+
+## **Opsi 1: VS Code (RECOMMENDED) ✅**
+
+### Setup (sekali saja):
+1. Install VS Code
+2. Install extension: **"Remote - Containers"** (ID: ms-vscode-remote.remote-containers)
+
+### Jalankan:
+```bash
+run.bat
+→ Pilih 1
+→ VS Code otomatis buka
+```
+
+### Kernel di VS Code:
+```
+Ctrl+Shift+P → "Jupyter: Select Kernel"
+→ Pilih "Python 3.11.X (container)"
+→ Kernel dari container sudah ready!
+```
+
+### Keuntungan:
+- ✅ Edit + Run di VS Code
+- ✅ Kernel dari container (semua module ada)
+- ✅ Intellisense bekerja
+- ✅ Debug support
+- ✅ Git integration
+
+---
+
+## **Opsi 2: Jupyter Lab (Browser)**
+
+```bash
+run.bat
+→ Pilih 2
+→ Copy URL & buka di browser
+```
+
+Keuntungan:
+- ✅ Tidak perlu install VS Code extension
+- ✅ Simple & reliable
+- ✅ Jupyter Lab UI yang familiar
 
 ---
 
