@@ -1,9 +1,9 @@
 {
   "name": "Flood ML Research",
-  "dockerComposeFile": "../docker-compose.yml",
-  "service": "flood-ml",
-  "workspaceFolder": "/app",
-  "remoteUser": "root",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -11,26 +11,26 @@
         "ms-python.vscode-pylance",
         "ms-toolsai.jupyter",
         "ms-toolsai.jupyter-keymap",
-        "ms-toolsai.jupyter-renderers"
+        "ms-toolsai.jupyter-renderers",
+        "ms-python.debugpy"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python",
         "python.linting.enabled": true,
         "python.linting.pylintEnabled": true,
-        "jupyter.notebooks.formatOnSave": true,
-        "[python]": {
-          "editor.defaultFormatter": "ms-python.python",
-          "editor.formatOnSave": true
-        }
+        "jupyter.notebookFileRoot": "${workspaceFolder}",
+        "python.formatting.provider": "black"
       }
     }
   },
-  "postCreateCommand": "pip install --no-cache-dir jupyter-lab ipywidgets nbconvert && jupyter notebook --generate-config",
+  "postCreateCommand": "pip install --no-cache-dir -r requirements.txt && pip install --no-cache-dir jupyter-lab ipywidgets nbconvert",
+  "remoteUser": "vscode",
   "forwardPorts": [8888, 6006],
-  "portAttributes": {
+  "portsAttributes": {
     "8888": {
-      "label": "Jupyter Lab",
-      "onAutoForward": "notify"
+      "label": "Jupyter",
+      "onAutoForward": "silent"
     }
   }
 }
+

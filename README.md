@@ -4,91 +4,106 @@
 
 ---
 
-## 🚀 QUICK START - 2 Steps!
+## 🚀 QUICK START - Choose Your Path
 
-### Step 1: Clone
+### **Option A: VS Code (RECOMMENDED) ⭐**
+
+Perfect for notebook development!
+
 ```bash
 git clone https://github.com/Aepra/flood-ml-research.git
 cd flood-ml-research
+
+code .
 ```
 
-### Step 2: Run ONE command
+**VS Code will ask:** "Reopen in Dev Container?" → **Click Yes**
 
-**Windows:**
+**Wait:** 5-10 minutes (first time only)
+
+**Then:**
+1. Open any `.ipynb` file
+2. Select kernel: `Ctrl+Shift+P` → `Python: Select Interpreter` → choose container Python
+3. Click ▶️ Run!
+
+✅ **No website needed. Just VS Code like normal!**
+
+See [.devcontainer/README.md](.devcontainer/README.md) for full guide.
+
+---
+
+### **Option B: Docker Terminal**
+
+If you prefer Jupyter Lab in browser:
+
 ```bash
+git clone https://github.com/Aepra/flood-ml-research.git
+cd flood-ml-research
+
+# Windows
 start.bat
-```
 
-**Linux/Mac:**
-```bash
+# Linux/Mac  
 ./start.sh
 ```
 
-**Wait for this message:**
-```
-flood-ml  | http://127.0.0.1:8888/lab?token=xxxxxxxxxxxxx
-```
-
-**Copy that URL and open in browser.** Done! ✅
+Open: `http://localhost:8888` in browser
 
 ---
 
-## 📋 What Happens Next
+## 📋 What You Get
 
-1. **Jupyter Lab opens** in your browser
-2. **Navigate to:** `notebooks/` folder
-3. **Click on:** any `.ipynb` file
-4. **Click ▶️ Run** - everything works!
+✅ **Automatic on first run:**
+- Python 3.11 installed
+- 50+ packages installed (numpy, pandas, geopandas, etc)
+- Jupyter kernel configured
+- All geospatial libraries (GDAL, Proj, etc)
 
-All modules automatically installed. Nothing else to do.
+✅ **Your data is safe:**
+- `notebooks/` - always saved on your computer
+- `data/` - persistent
+- `results/` - persistent
+
+✅ **No Docker knowledge needed** - just open VS Code!
 
 ---
 
-## ✅ Included Notebooks
+## 📚 Notebooks Ready to Run
 
 - `00a_grid_generation.ipynb` - Create 250m spatial grid
-- `00b_spatiotemporal_schema.ipynb` - Build ST base dataset
+- `00b_spatiotemporal_schema.ipynb` - Build ST base dataset  
 - `00c_flood_labeling.ipynb` - Label flood events
 
 All ready to run immediately!
 
 ---
 
-## 📁 Data Structure
-
-Your computer only saves important stuff:
-```
-flood-ml-research/
-├── notebooks/     ← .ipynb files (your work)
-├── data/          ← Input data
-├── results/       ← Outputs (figures, metrics)
-└── models/        ← Trained models
-```
-
-**Everything else runs in Docker** - won't clutter your computer!
-
----
-
-## 🛑 Stop & Clean Up
-
-**Stop Jupyter:**
-```
-Ctrl+C in terminal
-```
-
-**Remove container (but keep your data):**
-```bash
-docker-compose down
-```
-
----
-
 ## 📖 Full Documentation
 
-- **[Quick Start Guide](README_QUICKSTART.md)** - Detailed instructions
+- **[VS Code Setup Guide](.devcontainer/README.md)** ← Start here!
+- **[Quick Start Guide](README_QUICKSTART.md)** - Detailed troubleshooting
 - **[Research Proposal](docs/research_proposal.md)** - Full research methodology
 - **[Dataset Spec](docs/DATASET_SPECIFICATION.md)** - Data documentation
-- **[Pipeline](docs/PIPELINE.md)** - Data processing workflow
+
+---
+
+## ✅ Prerequisites
+
+**For VS Code (recommended):**
+- VS Code installed (free) - [download](https://code.visualstudio.com)
+- Dev Containers extension (free)
+- Docker Desktop (free) - [download](https://docker.com/products/docker-desktop)
+
+**OR for Docker terminal:**
+- Docker Desktop
+- Terminal/CMD
+
+**For virtual environment (alternative):**
+- Python 3.9+
+
+**All options:**
+- Git - [download](https://git-scm.com)
+- ~2GB disk space
 
 ---
 
@@ -98,28 +113,16 @@ docker-compose down
 
 ---
 
-## ✅ Prerequisites
-
-- **Docker Desktop** (free) - [download here](https://docker.com/products/docker-desktop)
-- **Git** - [download here](https://git-scm.com)
-- **~2GB disk space**
-
----
-
 ## ⚠️ Troubleshooting
 
-| Problem | Fix |
-|---------|-----|
-| Docker not found | Install Docker Desktop |
+| Problem | Solution |
+|---------|----------|
+| Dev Containers not found | Install extension from VS Code |
+| Reopen prompt not showing | Restart VS Code |
+| Kernel errors | Wait for container to finish loading (1-2 min) |
 | Port 8888 in use | Edit `docker-compose.yml`, change 8888 → 8889 |
-| Module not found | Restart: `docker-compose down` then `start.bat` |
-| Slow first run | Normal (5-10 min) - installing Python + packages |
 
----
-
-## 🤔 Questions?
-
-See [README_QUICKSTART.md](README_QUICKSTART.md) for complete troubleshooting guide
+See [.devcontainer/README.md](.devcontainer/README.md) for more!
 
 ---
 
