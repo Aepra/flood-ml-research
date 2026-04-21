@@ -1,8 +1,46 @@
-# Docker Setup Guide
+# Setup Guide - Docker or Virtual Environment
 
-## 🚀 **SUPER QUICK START** (1 Perintah!)
+## 🚀 **Option 1: Virtual Environment (RECOMMENDED - Simpler)**
 
-### Di Komputer Lain:
+### Quick Start
+
+```bash
+git clone https://github.com/YOUR_USERNAME/flood-ml-research.git
+cd flood-ml-research
+
+# Windows
+setup_env.bat
+
+# Linux/Mac
+./setup_env.sh
+```
+
+**⏳ Wait 5-10 minutes** (first time only - installs all packages)
+
+Then run:
+
+```bash
+run.bat    # Windows
+./run.sh   # Linux/Mac
+```
+
+**Menu will appear:**
+```
+1️⃣  Start Jupyter Lab
+2️⃣  Run notebook
+3️⃣  Run Python script
+5️⃣  Exit
+```
+
+### What happens?
+- ✅ Creates `research-env/` folder with Python environment
+- ✅ Installs all packages from `requirements.txt`
+- ✅ Kernel name: `Python (research-env)`
+- ✅ **No Docker needed!**
+
+---
+
+## 🐳 **Option 2: Docker (If you prefer)**
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/flood-ml-research.git
@@ -10,140 +48,83 @@ cd flood-ml-research
 
 # Windows
 run.bat
+# Then choose: Setup Docker option
 
 # Linux/Mac
 ./run.sh
 ```
 
-**Itu saja!** ✨ Menu interaktif akan muncul dengan opsi pilihan.
+See [DOCKER_LEGACY.md](DOCKER_LEGACY.md) for full Docker setup.
 
 ---
 
-## 🎯 **RECOMMENDED: VS Code + Remote Container**
+## 📋 Which option to choose?
 
-1️⃣ Install VS Code extension: **"Remote - Containers"** (ms-vscode-remote.remote-containers)
+| Feature | Virtual Env | Docker |
+|---------|-------------|--------|
+| Setup time | 5-10 min | 15-30 min |
+| Disk space | ~500MB | ~1-2GB |
+| Complexity | Simple | Medium |
+| Reproducibility | Good | Excellent |
+| Remote work | ✅ | ✅ |
+| Recommended | ⭐⭐⭐ | ⭐⭐ |
 
-2️⃣ Jalankan:
+---
+
+## 🐍 Virtual Environment Details
+
+### Folder structure
+```
+research-env/
+├── Scripts/          # Windows executables
+├── bin/              # Linux/Mac executables
+├── Lib/              # Python packages
+└── pyvenv.cfg
+```
+
+### Activate manually (optional)
 ```bash
-run.bat
+# Windows
+research-env\Scripts\activate.bat
+
+# Linux/Mac
+source research-env/bin/activate
+
+# Then run Python
+python main.py
 ```
 
-3️⃣ Pilih **Opsi 1**: "Buka VS Code + Remote Container + Jupyter kernel"
-
-4️⃣ VS Code akan auto-open dengan:
-- ✅ Python kernel dari container
-- ✅ Semua module terinstall
-- ✅ Siap edit & run notebook
-
-5️⃣ Buka notebook → pilih kernel (Ctrl+Shift+P) → langsung jalankan!
-
----
-
-## 📋 Menu Interaktif Pilihan
-
-```
-1️⃣  Buka VS Code + Remote Container + Jupyter kernel  ← RECOMMENDED!
-2️⃣  Start container & buka Jupyter Lab (Browser)
-3️⃣  Jalankan notebook
-4️⃣  Jalankan Python script
-5️⃣  Stop container
-6️⃣  Keluar
-```
-
----
-
-## **Opsi 1: VS Code (RECOMMENDED) ✅**
-
-### Setup (sekali saja):
-1. Install VS Code
-2. Install extension: **"Remote - Containers"** (ID: ms-vscode-remote.remote-containers)
-
-### Jalankan:
+### Deactivate
 ```bash
-run.bat
-→ Pilih 1
-→ VS Code otomatis buka
+deactivate
 ```
 
-### Kernel di VS Code:
-```
-Ctrl+Shift+P → "Jupyter: Select Kernel"
-→ Pilih "Python 3.11.X (container)"
-→ Kernel dari container sudah ready!
-```
-
-### Keuntungan:
-- ✅ Edit + Run di VS Code
-- ✅ Kernel dari container (semua module ada)
-- ✅ Intellisense bekerja
-- ✅ Debug support
-- ✅ Git integration
-
----
-
-## **Opsi 2: Jupyter Lab (Browser)**
-
+### Delete environment
 ```bash
-run.bat
-→ Pilih 2
-→ Copy URL & buka di browser
-```
+# Windows
+rmdir /s research-env
 
-Keuntungan:
-- ✅ Tidak perlu install VS Code extension
-- ✅ Simple & reliable
-- ✅ Jupyter Lab UI yang familiar
-
----
-
-## 🔧 Manual Commands (Optional)
-
-Jika ingin manual control:
-
-```bash
-# Start container only
-docker-compose up -d
-
-# Stop container
-docker-compose down
-
-# Access container bash
-docker-compose exec flood-ml bash
-
-# Run specific notebook
-docker-compose exec flood-ml jupyter nbconvert --to notebook --execute notebooks/00a_grid_generation.ipynb
-
-# Run specific script
-docker-compose exec flood-ml python src/main.py
+# Linux/Mac
+rm -rf research-env
 ```
 
 ---
 
-## 📂 Output Files
+## 🔧 Troubleshooting
 
-- Notebook hasil execute tersimpan di: `notebooks/outputs/`
-- Results tersimpan di: `results/`
-- Models tersimpan di: `models/`
+### "ModuleNotFoundError" when running notebook
+- Make sure `research-env/` folder exists
+- Run `setup_env.bat` again
+- Check kernel is set to `Python (research-env)`
 
----
+### GDAL/geospatial library errors (Windows)
+- These may fail on Windows - use Docker instead
+- Or install system packages manually
 
-## ✅ Prerequisites
-
-- Docker Desktop installed
-- Git installed
-- ~5GB disk space (untuk docker image + data)
-
----
-
-## ⚠️ Troubleshooting
-
-| Error | Solusi |
-|-------|--------|
-| Port 8888 used | Edit docker-compose.yml port |
-| Permission denied | `chmod +x run.sh` (Linux/Mac) |
-| Docker not found | Install Docker Desktop |
-| Build error | Pastikan internet stabil, coba ulang |
+### Port 8888 already in use
+- Change port in run.py
+- Or stop other Jupyter instances
 
 ---
 
-**Happy researching! 🌊**
+**Happy coding! 🌊**

@@ -16,7 +16,12 @@ results/figures/*
 *.log
 .pytest_cache/
 
-# Large files - use Git LFS or cloud storage
+# Virtual Environment
+research-env/
+venv/
+.venv/
+
+# Large files
 *.gpkg
 *.geojson
 *.tif
